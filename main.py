@@ -18,7 +18,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize config
-config = load_config()
+config = load_config()  # This will now load MCP servers from the JSON file
+
 
 # Lifespan context manager for FastAPI
 @asynccontextmanager
@@ -26,15 +27,13 @@ async def lifespan(app: FastAPI):
     # Yield control back to FastAPI
     yield
 
+
 # Initialize FastAPI app
 app = FastAPI(
     title="TigerGPT",
     description="Web-based AI chatbot with Pydantic AI and MCP support",
     lifespan=lifespan
 )
-
-# Initialize directories
-Path("static").mkdir(exist_ok=True)
 
 # Initialize agent with default configuration and MCP servers
 agent = create_agent(config["llm_config"], config.get("mcp_servers", []))
@@ -45,6 +44,7 @@ api.initialize(config, agent)
 # Register API routes
 app.include_router(api.router, prefix="/api")
 
+
 # Health check route at root level
 @app.get("/")
 async def root():
@@ -53,7 +53,7 @@ async def root():
 
 
 if __name__ == "__main__":
-    # Save config to file
+    # Save config to file (this will save MCP servers to the JSON file)
     save_config(config)
 
     # Use reload only in development mode
