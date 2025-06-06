@@ -20,6 +20,7 @@ conversation_manager = None
 app_config = None
 agent = None
 
+
 def initialize(config, agent_instance):
     global conversation_manager, app_config, agent
     conversation_manager = ConversationManager()
@@ -97,6 +98,8 @@ async def chat_stream(request: ChatRequest):
 
 
 # MCP Server endpoints
+# Update only the MCP server-related endpoints
+
 @router.get("/mcp/servers", response_model=List[dict])
 async def get_mcp_servers():
     """Get all MCP server configurations"""
@@ -139,7 +142,7 @@ async def add_mcp_server(request: MCPServerRequest):
 
     app_config["mcp_servers"] = mcp_servers
 
-    # Save the config
+    # Save the config (this will save MCP servers to the JSON file)
     save_config(app_config)
 
     # Recreate agent with updated MCP servers
@@ -158,7 +161,7 @@ async def delete_mcp_server(server_name: str):
     mcp_servers = [server for server in mcp_servers if server.name != server_name]
     app_config["mcp_servers"] = mcp_servers
 
-    # Save the config
+    # Save the config (this will save MCP servers to the JSON file)
     save_config(app_config)
 
     # Recreate agent with updated MCP servers
@@ -172,7 +175,8 @@ async def delete_mcp_server(server_name: str):
 async def get_config():
     """Get current configuration"""
     return {
-        "llm_config": app_config["llm_config"].model_dump() if hasattr(app_config["llm_config"], "model_dump") else app_config["llm_config"],
+        "llm_config": app_config["llm_config"].model_dump() if hasattr(app_config["llm_config"], "model_dump") else
+        app_config["llm_config"],
         "mcp_servers": [
             {
                 "name": s.name,
