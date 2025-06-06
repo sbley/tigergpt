@@ -105,7 +105,7 @@ def load_config() -> dict:
 
     if CONFIG_FILE.exists():
         try:
-            with open(CONFIG_FILE, "r") as f:
+            with open(CONFIG_FILE, "r", "utf-8") as f:
                 config_dict = yaml.safe_load(f)
 
                 # Validate and construct proper objects
@@ -145,7 +145,7 @@ def save_config(config: dict) -> bool:
         }
 
         print(f"Saving main config to {CONFIG_FILE} (keys: {list(config_dict.keys())})")
-        with open(CONFIG_FILE, "w") as f:
+        with open(CONFIG_FILE, "w", "utf-8") as f:
             yaml.dump(config_dict, f)
         return True
     except Exception as e:

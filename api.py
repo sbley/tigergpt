@@ -175,8 +175,9 @@ async def delete_mcp_server(server_name: str):
 async def get_config():
     """Get current configuration"""
     return {
-        "llm_config": app_config["llm_config"].model_dump() if hasattr(app_config["llm_config"], "model_dump") else
-        app_config["llm_config"],
+        "llm_config": (
+            app_config["llm_config"].model_dump() if hasattr(app_config["llm_config"], "model_dump") else app_config[
+                "llm_config"]),
         "mcp_servers": [
             {
                 "name": s.name,
